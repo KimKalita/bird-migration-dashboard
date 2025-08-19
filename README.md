@@ -33,4 +33,4 @@ An interactive web application for analyzing bird migration patterns, environmen
 - pip package manager
 
 ## Author
-Kim Kalita (@mrregaks) - Bird Migration Research Analysis
+Kim Kalita (@mrregaks)
