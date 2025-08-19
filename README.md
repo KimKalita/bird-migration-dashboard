@@ -13,7 +13,7 @@ An interactive web application for analyzing bird migration patterns, environmen
 - **📈 Statistical Analysis**: Comprehensive insights and behavioral patterns
 - **🎛️ Interactive Filters**: Species, migration reasons, and environmental conditions
 
-**[🔗 View Live Dashboard](YOUR-STREAMLIT-URL-HERE)**
+**[🔗 View Live Dashboard](https://bird-migration-dashboard.streamlit.app/)**
 
 *Replace with your actual Streamlit URL after deployment*
 
