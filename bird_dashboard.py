@@ -313,7 +313,7 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
     
     # Get color palette (bright colors for dark background)
     unique_categories = df_sample[color_col].unique()
-    bright_colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', [REDACTED:PASSWORD], '#85C1E9']
+    bright_colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#FF8A80', '#85C1E9']
     color_map = {cat: bright_colors[i % len(bright_colors)] for i, cat in enumerate(unique_categories)}
     
     frames = []
