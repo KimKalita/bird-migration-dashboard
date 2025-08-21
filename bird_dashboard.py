@@ -13,7 +13,7 @@ warnings.filterwarnings('ignore')
 # Set pandas options
 pd.options.mode.chained_assignment = None
 
-# Page configuration with forced light theme
+# Page configuration with dark theme
 st.set_page_config(
     page_title="Bird Migration",
     page_icon="🦅",
@@ -21,43 +21,131 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Force light theme with custom CSS
+# Dark theme with custom CSS
 st.markdown("""
 <style>
     .stApp {
-        background-color: #FFFFFF;
-        color: #000000;
+        background-color: #0E1117;
+        color: #FAFAFA;
     }
     .main .block-container {
-        background-color: #FFFFFF;
+        background-color: #0E1117;
+        color: #FAFAFA;
         padding-top: 2rem;
     }
     .css-1d391kg {
-        background-color: #F0F2F6;
+        background-color: #262730;
     }
     [data-testid="metric-container"] {
-        background-color: #FFFFFF;
-        border: 1px solid #DDDDDD;
+        background-color: #1E1E1E;
+        border: 1px solid #333333;
         padding: 15px;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(255,255,255,0.1);
+        color: #FAFAFA;
+    }
+    [data-testid="metric-container"] > div {
+        color: #FAFAFA;
+    }
+    [data-testid="metric-container"] label {
+        color: #CCCCCC !important;
     }
     .stMarkdown, .stText, .stWrite {
-        color: #000000 !important;
+        color: #FAFAFA !important;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: #000000 !important;
+        color: #FAFAFA !important;
     }
     .stSelectbox > div > div {
-        background-color: #FFFFFF;
-        color: #000000;
+        background-color: #262730;
+        color: #FAFAFA;
+        border: 1px solid #333333;
     }
     .stMultiSelect > div > div {
-        background-color: #FFFFFF;
-        color: #000000;
+        background-color: #262730;
+        color: #FAFAFA;
+        border: 1px solid #333333;
+    }
+    .stSlider > div > div > div {
+        background-color: #262730;
+    }
+    .stCheckbox > label {
+        color: #FAFAFA !important;
+    }
+    .stRadio > label {
+        color: #FAFAFA !important;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        background-color: #262730;
+    }
+    .stTabs [data-baseweb="tab"] {
+        color: #FAFAFA;
+        background-color: #1E1E1E;
+        border-color: #333333;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #333333 !important;
+        color: #FAFAFA !important;
+    }
+    .stSidebar {
+        background-color: #262730;
+    }
+    .stSidebar > div > div {
+        background-color: #262730;
+        color: #FAFAFA;
+    }
+    .sidebar .sidebar-content {
+        background-color: #262730;
+        color: #FAFAFA;
+    }
+    .stAlert > div {
+        background-color: #1E1E1E;
+        border-color: #333333;
+        color: #FAFAFA;
+    }
+    .stInfo {
+        background-color: #1E3A5F;
+        border-left-color: #3498DB;
+        color: #FAFAFA;
+    }
+    .stSuccess {
+        background-color: #1E4D2B;
+        border-left-color: #27AE60;
+        color: #FAFAFA;
+    }
+    .stWarning {
+        background-color: #4D3A1E;
+        border-left-color: #F39C12;
+        color: #FAFAFA;
+    }
+    .stError {
+        background-color: #4D1E1E;
+        border-left-color: #E74C3C;
+        color: #FAFAFA;
+    }
+    .stDataFrame {
+        background-color: #1E1E1E;
+        color: #FAFAFA;
+    }
+    .stContainer {
+        background-color: #1E1E1E;
+        border: 1px solid #333333;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+    /* Fix for metric values */
+    [data-testid="metric-container"] [data-testid="metric-value"] {
+        color: #FAFAFA !important;
+    }
+    [data-testid="metric-container"] [data-testid="metric-delta"] {
+        color: #CCCCCC !important;
     }
 </style>
 """, unsafe_allow_html=True)
+
+# Set matplotlib to dark theme
+plt.style.use('dark_background')
 
 st.title("Bird Migration Analysis")
 st.markdown("### Visualizing patterns and routes of migratory birds")
@@ -223,10 +311,10 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
     
     fig = go.Figure()
     
-    # Get color palette
+    # Get color palette (bright colors for dark background)
     unique_categories = df_sample[color_col].unique()
-    colors = px.colors.qualitative.Set1 + px.colors.qualitative.Set2
-    color_map = {cat: colors[i % len(colors)] for i, cat in enumerate(unique_categories)}
+    bright_colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', [REDACTED:PASSWORD], '#85C1E9']
+    color_map = {cat: bright_colors[i % len(bright_colors)] for i, cat in enumerate(unique_categories)}
     
     frames = []
     available_months = sorted(df_sample[month_col].dropna().unique())
@@ -297,7 +385,7 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
         title=dict(
             text='Monthly Migration Routes by Migration Reason<br><sub>Trace seasonal migration patterns month by month</sub>',
             x=0.5,
-            font=dict(size=16)
+            font=dict(size=16, color='white')
         ),
         geo=dict(
             projection_type='natural earth',
@@ -305,15 +393,17 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
             showcountries=True,
             countrywidth=0.5,
             showocean=True,
-            oceancolor='lightblue',
-            landcolor='lightgray',
-            coastlinecolor='gray'
+            oceancolor='#1a1a2e',
+            landcolor='#16213e',
+            coastlinecolor='#4a90e2',
+            bgcolor='#0E1117'
         ),
         sliders=[dict(
             active=0,
             currentvalue={"prefix": "Month: "},
             pad={"t": 50},
-            steps=slider_steps
+            steps=slider_steps,
+            font=dict(color='white')
         )],
         updatemenus=[dict(
             type='buttons',
@@ -332,8 +422,9 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
                                       transition=dict(duration=0))])
             ],
             x=0.1, y=0, 
-            bgcolor='rgba(255,255,255,0.8)',
-            bordercolor='gray'
+            bgcolor='rgba(30,30,30,0.8)',
+            bordercolor='gray',
+            font=dict(color='white')
         )],
         height=700,
         showlegend=True,
@@ -342,8 +433,12 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
             y=0.99,
             xanchor="left", 
             x=0.01,
-            bgcolor="rgba(255,255,255,0.9)"
-        )
+            bgcolor="rgba(30,30,30,0.9)",
+            font=dict(color='white')
+        ),
+        paper_bgcolor='#0E1117',
+        plot_bgcolor='#0E1117',
+        font=dict(color='white')
     )
 
     fig.frames = frames
@@ -355,7 +450,7 @@ def create_point_animation_plotly(df_sample, month_col, animation_speed, month_l
     
     color_column = 'Migration_Reason' if 'Migration_Reason' in df_sample.columns else 'Species'
     
-    # Create the scatter plot
+    # Create the scatter plot with dark theme
     fig = px.scatter_geo(
         df_sample,
         lat='Start_Latitude',
@@ -366,7 +461,28 @@ def create_point_animation_plotly(df_sample, month_col, animation_speed, month_l
         hover_data=['Species', 'Migration_Reason', 'Region', 'Flight_Distance_km'] if all(col in df_sample.columns for col in ['Species', 'Migration_Reason', 'Region', 'Flight_Distance_km']) else None,
         title='Bird Migration Starting Points by Month and Migration Reason',
         projection="natural earth",
-        height=700
+        height=700,
+        color_discrete_sequence=['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
+    )
+    
+    # Update layout for dark theme
+    fig.update_layout(
+        geo=dict(
+            bgcolor='#0E1117',
+            showland=True,
+            landcolor='#16213e',
+            showocean=True,
+            oceancolor='#1a1a2e',
+            showcountries=True,
+            countrycolor='#4a90e2'
+        ),
+        paper_bgcolor='#0E1117',
+        plot_bgcolor='#0E1117',
+        font=dict(color='white'),
+        legend=dict(
+            bgcolor="rgba(30,30,30,0.9)",
+            font=dict(color='white')
+        )
     )
     
     for frame in fig.frames:
@@ -387,7 +503,7 @@ def create_point_animation_plotly(df_sample, month_col, animation_speed, month_l
         title=dict(
             text='Monthly Migration Patterns by Migration Reason<br><sub>Starting points colored by migration purpose</sub>',
             x=0.5,
-            font=dict(size=16)
+            font=dict(size=16, color='white')
         )
     )
     
@@ -587,15 +703,42 @@ def display_summary_stats(data):
         if 'Species' in data.columns:
             st.write("**Species Distribution:**")
             species_dist = data['Species'].value_counts().head(10)
-            st.bar_chart(species_dist)
+            # Create bar chart with dark theme
+            fig_species = px.bar(
+                x=species_dist.index, 
+                y=species_dist.values,
+                color=species_dist.values,
+                color_continuous_scale='viridis',
+                labels={'x': 'Species', 'y': 'Count'}
+            )
+            fig_species.update_layout(
+                paper_bgcolor='#0E1117',
+                plot_bgcolor='#0E1117',
+                font=dict(color='white'),
+                showlegend=False
+            )
+            st.plotly_chart(fig_species, use_container_width=True)
         
         # Migration reasons
         if 'Migration_Reason' in data.columns:
             st.write("**Migration Reasons:**")
             reason_dist = data['Migration_Reason'].value_counts()
-            st.bar_chart(reason_dist)
+            fig_reason = px.bar(
+                x=reason_dist.index, 
+                y=reason_dist.values,
+                color=reason_dist.values,
+                color_continuous_scale='plasma',
+                labels={'x': 'Migration Reason', 'y': 'Count'}
+            )
+            fig_reason.update_layout(
+                paper_bgcolor='#0E1117',
+                plot_bgcolor='#0E1117',
+                font=dict(color='white'),
+                showlegend=False
+            )
+            st.plotly_chart(fig_reason, use_container_width=True)
 
-# Environmental functions
+# Environmental functions (updated with dark theme)
 def create_environmental_filters(data):
     """Create interactive filters for environmental analysis"""
     
@@ -777,9 +920,9 @@ def create_environmental_sweet_spot(data):
                     mode='markers',
                     marker=dict(
                         size=8,
-                        color='green',
+                        color='#27AE60',
                         opacity=0.6,
-                        line=dict(width=1, color='darkgreen')
+                        line=dict(width=1, color='white')
                     ),
                     name='Successful',
                     hovertemplate='Temp: %{x}°C<br>Wind: %{y} km/h<br>Status: Successful<extra></extra>'
@@ -793,9 +936,9 @@ def create_environmental_sweet_spot(data):
                     mode='markers',
                     marker=dict(
                         size=8,
-                        color='red',
+                        color='#E74C3C',
                         opacity=0.6,
-                        line=dict(width=1, color='darkred')
+                        line=dict(width=1, color='white')
                     ),
                     name='Failed',
                     hovertemplate='Temp: %{x}°C<br>Wind: %{y} km/h<br>Status: Failed<extra></extra>'
@@ -810,8 +953,8 @@ def create_environmental_sweet_spot(data):
                     type="rect",
                     x0=temp_sweet.iloc[0], y0=wind_sweet.iloc[0],
                     x1=temp_sweet.iloc[1], y1=wind_sweet.iloc[1],
-                    fillcolor="rgba(0,255,0,0.1)",
-                    line=dict(color="green", width=2, dash="dash"),
+                    fillcolor="rgba(39,174,96,0.2)",
+                    line=dict(color="#27AE60", width=2, dash="dash"),
                 )
                 
                 fig.add_annotation(
@@ -820,9 +963,10 @@ def create_environmental_sweet_spot(data):
                     text="Sweet Spot Zone",
                     showarrow=True,
                     arrowhead=2,
-                    arrowcolor="green",
-                    bgcolor="rgba(255,255,255,0.8)",
-                    bordercolor="green"
+                    arrowcolor="#27AE60",
+                    bgcolor="rgba(30,30,30,0.8)",
+                    bordercolor="#27AE60",
+                    font=dict(color='white')
                 )
             
             fig.update_layout(
@@ -830,7 +974,13 @@ def create_environmental_sweet_spot(data):
                 xaxis_title="Temperature (°C)",
                 yaxis_title="Wind Speed (km/h)",
                 height=400,
-                legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+                legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01, 
+                           bgcolor="rgba(30,30,30,0.9)", font=dict(color='white')),
+                paper_bgcolor='#0E1117',
+                plot_bgcolor='#1E1E1E',
+                font=dict(color='white'),
+                xaxis=dict(gridcolor='#333333'),
+                yaxis=dict(gridcolor='#333333')
             )
             
             st.plotly_chart(fig, use_container_width=True)
@@ -852,25 +1002,30 @@ def create_risk_assessment_gauge(data):
         mode = "gauge+number+delta",
         value = risk_score,
         domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': "Environmental Risk Level"},
+        title = {'text': "Environmental Risk Level", 'font': {'color': 'white'}},
         delta = {'reference': 5.0},
         gauge = {
-            'axis': {'range': [None, 10]},
-            'bar': {'color': "darkblue"},
+            'axis': {'range': [None, 10], 'tickcolor': 'white'},
+            'bar': {'color': "#3498DB"},
             'steps': [
-                {'range': [0, 3], 'color': "lightgreen"},
-                {'range': [3, 6], 'color': "yellow"},
-                {'range': [6, 10], 'color': "red"}
+                {'range': [0, 3], 'color': "#27AE60"},
+                {'range': [3, 6], 'color': "#F39C12"},
+                {'range': [6, 10], 'color': "#E74C3C"}
             ],
             'threshold': {
-                'line': {'color': "red", 'width': 4},
+                'line': {'color': "#E74C3C", 'width': 4},
                 'thickness': 0.75,
                 'value': 7
             }
-        }
+        },
+        number={'font': {'color': 'white'}}
     ))
     
-    fig.update_layout(height=300)
+    fig.update_layout(
+        height=300,
+        paper_bgcolor='#0E1117',
+        font=dict(color='white')
+    )
     st.plotly_chart(fig, use_container_width=True)
     
     # Risk interpretation
@@ -903,7 +1058,12 @@ def create_environmental_correlations(data):
             title="Environmental Factors Correlation Matrix"
         )
         
-        fig.update_layout(height=400)
+        fig.update_layout(
+            height=400,
+            paper_bgcolor='#0E1117',
+            plot_bgcolor='#0E1117',
+            font=dict(color='white')
+        )
         st.plotly_chart(fig, use_container_width=True)
         
         # Find strongest correlations
@@ -1317,10 +1477,14 @@ with tab3:
                         performance = "🟡 Medium Distance"
                         emoji = "✈️"
                     
-                    # Create card using Streamlit components
+                    # Create card using container
                     with st.container():
-                        st.markdown(f"### {icon} {species} {emoji}")
-                        st.markdown(f"**{performance}**")
+                        st.markdown(f"""
+                        <div style="background-color: #1E1E1E; padding: 1rem; border-radius: 8px; border: 1px solid #333333; margin-bottom: 1rem;">
+                            <h3 style="color: #FAFAFA; margin-top: 0;">{icon} {species} {emoji}</h3>
+                            <p style="color: #FAFAFA; font-weight: bold;">{performance}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
                         
                         # Metrics in columns
                         metric_col1, metric_col2, metric_col3 = st.columns(3)
@@ -1368,10 +1532,14 @@ with tab3:
                         performance = "🟡 Medium Distance"
                         emoji = "✈️"
                     
-                    # Create card using Streamlit components
+                    # Create card using container
                     with st.container():
-                        st.markdown(f"### {icon} {species} {emoji}")
-                        st.markdown(f"**{performance}**")
+                        st.markdown(f"""
+                        <div style="background-color: #1E1E1E; padding: 1rem; border-radius: 8px; border: 1px solid #333333; margin-bottom: 1rem;">
+                            <h3 style="color: #FAFAFA; margin-top: 0;">{icon} {species} {emoji}</h3>
+                            <p style="color: #FAFAFA; font-weight: bold;">{performance}</p>
+                        </div>
+                        """, unsafe_allow_html=True)
                         
                         # Metrics in columns
                         metric_col1, metric_col2, metric_col3 = st.columns(3)
@@ -1422,9 +1590,18 @@ with tab3:
                     color='Species',
                     title="Distribution of Migration Distances by Species",
                     nbins=20,
-                    opacity=0.7
+                    opacity=0.7,
+                    color_discrete_sequence=['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
                 )
-                hist_fig.update_layout(height=400)
+                hist_fig.update_layout(
+                    height=400,
+                    paper_bgcolor='#0E1117',  
+                    plot_bgcolor='#1E1E1E',
+                    font=dict(color='white'),
+                    xaxis=dict(gridcolor='#333333'),
+                    yaxis=dict(gridcolor='#333333'),
+                    legend=dict(bgcolor="rgba(30,30,30,0.9)", font=dict(color='white'))
+                )
                 st.plotly_chart(hist_fig, use_container_width=True)
                 
             elif analysis_type == "Species Comparison":
@@ -1434,10 +1611,19 @@ with tab3:
                     x='Species',
                     y=distance_col,
                     color='Species',
-                    title="Distance Range Comparison by Species"
+                    title="Distance Range Comparison by Species",
+                    color_discrete_sequence=['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
                 )
                 box_fig.update_xaxes(tickangle=45)
-                box_fig.update_layout(height=400, showlegend=False)
+                box_fig.update_layout(
+                    height=400, 
+                    showlegend=False,
+                    paper_bgcolor='#0E1117',
+                    plot_bgcolor='#1E1E1E',
+                    font=dict(color='white'),
+                    xaxis=dict(gridcolor='#333333'),
+                    yaxis=dict(gridcolor='#333333')
+                )
                 st.plotly_chart(box_fig, use_container_width=True)
                 
             else:  # Performance Ranking
@@ -1451,14 +1637,19 @@ with tab3:
                     color_continuous_scale='viridis'
                 )
                 ranking_fig.update_xaxes(tickangle=45)
-                ranking_fig.update_layout(height=400)
+                ranking_fig.update_layout(
+                    height=400,
+                    paper_bgcolor='#0E1117',
+                    plot_bgcolor='#1E1E1E',
+                    font=dict(color='white'),
+                    xaxis=dict(gridcolor='#333333'),
+                    yaxis=dict(gridcolor='#333333')
+                )
                 st.plotly_chart(ranking_fig, use_container_width=True)
     
     else:
         st.warning("⚠️ Distance data not found in the dataset. Cannot create statistical visualizations.")
         st.info("💡 Available columns: " + ", ".join(filtered_data.columns.tolist()))
-
-
 # End of file
 if __name__ == "__main__":
     st.write("🦅 Bird Migration Dashboard is running successfully!")
