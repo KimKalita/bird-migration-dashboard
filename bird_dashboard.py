@@ -22,6 +22,7 @@ st.set_page_config(
 )
 
 # Dark theme with custom CSS
+# Dark theme with custom CSS - Professional sizing
 st.markdown("""
 <style>
     .stApp {
@@ -32,10 +33,34 @@ st.markdown("""
         background-color: #0E1117;
         color: #FAFAFA;
         padding-top: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
+    
+    /* Container width control */
+    @media (min-width: 1400px) {
+        .main .block-container {
+            max-width: 1200px;
+        }
+    }
+    
+    @media (min-width: 1600px) {
+        .main .block-container {
+            max-width: 1400px;
+        }
+    }
+    
+    /* Professional spacing */
+    .element-container {
+        margin-bottom: 1rem;
+    }
+    
     .css-1d391kg {
         background-color: #262730;
     }
+    
     [data-testid="metric-container"] {
         background-color: #1E1E1E;
         border: 1px solid #333333;
@@ -43,103 +68,220 @@ st.markdown("""
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(255,255,255,0.1);
         color: #FAFAFA;
+        margin-bottom: 1rem;
     }
+    
     [data-testid="metric-container"] > div {
         color: #FAFAFA;
     }
+    
     [data-testid="metric-container"] label {
         color: #CCCCCC !important;
     }
+    
     .stMarkdown, .stText, .stWrite {
         color: #FAFAFA !important;
     }
+    
     h1, h2, h3, h4, h5, h6 {
         color: #FAFAFA !important;
+        margin-bottom: 1rem;
     }
+    
+    h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Input controls styling */
     .stSelectbox > div > div {
         background-color: #262730;
         color: #FAFAFA;
         border: 1px solid #333333;
     }
+    
     .stMultiSelect > div > div {
         background-color: #262730;
         color: #FAFAFA;
         border: 1px solid #333333;
     }
+    
     .stSlider > div > div > div {
         background-color: #262730;
     }
+    
     .stCheckbox > label {
         color: #FAFAFA !important;
     }
+    
     .stRadio > label {
         color: #FAFAFA !important;
     }
+    
+    /* Tab styling */
     .stTabs [data-baseweb="tab-list"] {
         background-color: #262730;
+        gap: 8px;
+        padding: 0.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
     }
+    
     .stTabs [data-baseweb="tab"] {
         color: #FAFAFA;
         background-color: #1E1E1E;
         border-color: #333333;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
     }
+    
     .stTabs [aria-selected="true"] {
         background-color: #333333 !important;
         color: #FAFAFA !important;
     }
+    
+    /* Sidebar styling */
     .stSidebar {
         background-color: #262730;
+        width: 280px !important;
     }
+    
     .stSidebar > div > div {
         background-color: #262730;
         color: #FAFAFA;
+        padding: 1rem;
     }
+    
     .sidebar .sidebar-content {
         background-color: #262730;
         color: #FAFAFA;
     }
+    
+    /* Alert styling */
     .stAlert > div {
         background-color: #1E1E1E;
         border-color: #333333;
         color: #FAFAFA;
+        border-radius: 8px;
+        margin: 1rem 0;
     }
+    
     .stInfo {
         background-color: #1E3A5F;
         border-left-color: #3498DB;
         color: #FAFAFA;
     }
+    
     .stSuccess {
         background-color: #1E4D2B;
         border-left-color: #27AE60;
         color: #FAFAFA;
     }
+    
     .stWarning {
         background-color: #4D3A1E;
         border-left-color: #F39C12;
         color: #FAFAFA;
     }
+    
     .stError {
         background-color: #4D1E1E;
         border-left-color: #E74C3C;
         color: #FAFAFA;
     }
+    
+    /* DataFrame styling */
     .stDataFrame {
         background-color: #1E1E1E;
         color: #FAFAFA;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 1rem 0;
     }
-    .stContainer {
+    
+    /* Custom container for cards */
+    .dashboard-card {
         background-color: #1E1E1E;
         border: 1px solid #333333;
         border-radius: 8px;
-        padding: 1rem;
-        margin: 0.5rem 0;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 2px 4px rgba(255,255,255,0.1);
     }
+    
+    /* Professional spacing for columns */
+    [data-testid="column"] {
+        padding: 0 0.75rem;
+    }
+    
+    [data-testid="column"]:first-child {
+        padding-left: 0;
+    }
+    
+    [data-testid="column"]:last-child {
+        padding-right: 0;
+    }
+    
+    /* Plotly chart containers */
+    .js-plotly-plot {
+        margin: 1rem 0;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    /* Section dividers */
+    hr {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #333333, transparent);
+        margin: 2rem 0;
+    }
+    
     /* Fix for metric values */
     [data-testid="metric-container"] [data-testid="metric-value"] {
         color: #FAFAFA !important;
+        font-size: 1.5rem;
+        font-weight: 600;
     }
+    
     [data-testid="metric-container"] [data-testid="metric-delta"] {
         color: #CCCCCC !important;
+    }
+    
+    /* Professional button styling */
+    .stButton > button {
+        background-color: #3498DB;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: background-color 0.3s;
+    }
+    
+    .stButton > button:hover {
+        background-color: #2980B9;
+    }
+    
+    /* Compact spacing for insights */
+    .insight-section {
+        margin: 1.5rem 0;
+    }
+    
+    .insight-section ul {
+        margin: 0.5rem 0;
+    }
+    
+    .insight-section li {
+        margin: 0.25rem 0;
+        padding-left: 0.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -1454,9 +1596,9 @@ with tab3:
             'Heron': '🦢'
         }
         
-        # Create cards in rows of 2
+        # Create cards in rows of 2 with professional styling
         for i in range(0, len(stats), 2):
-            col_left, col_right = st.columns(2)
+            col_left, col_right = st.columns(2, gap="large")
             
             # Left card
             with col_left:
@@ -1470,48 +1612,52 @@ with tab3:
                     if avg_dist > overall_avg * 1.2:
                         performance = "🟢 Long Distance"
                         emoji = "🚀"
+                        card_color = "#1E4D2B"
                     elif avg_dist < overall_avg * 0.8:
                         performance = "🔵 Short Distance" 
                         emoji = "🏠"
+                        card_color = "#1E3A5F"
                     else:
                         performance = "🟡 Medium Distance"
                         emoji = "✈️"
+                        card_color = "#4D3A1E"
                     
-                    # Create card using container
-                    with st.container():
-                        st.markdown(f"""
-                        <div style="background-color: #1E1E1E; padding: 1rem; border-radius: 8px; border: 1px solid #333333; margin-bottom: 1rem;">
-                            <h3 style="color: #FAFAFA; margin-top: 0;">{icon} {species} {emoji}</h3>
-                            <p style="color: #FAFAFA; font-weight: bold;">{performance}</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                        # Metrics in columns
-                        metric_col1, metric_col2, metric_col3 = st.columns(3)
-                        
-                        with metric_col1:
-                            st.metric(
-                                "Average", 
-                                f"{species_data['Average Distance (km)']:.0f} km",
-                                delta=f"{species_data['Average Distance (km)'] - overall_avg:.0f} km"
-                            )
-                        
-                        with metric_col2:
-                            st.metric(
-                                "Minimum", 
-                                f"{species_data['Min Distance (km)']:.0f} km"
-                            )
-                        
-                        with metric_col3:
-                            st.metric(
-                                "Maximum", 
-                                f"{species_data['Max Distance (km)']:.0f} km"
-                            )
-                        
-                        # Additional info
-                        st.info(f"📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km")
-                        
-                        st.markdown("---")
+                    # Create professional card
+                    st.markdown(f"""
+                    <div class="dashboard-card" style="background-color: {card_color}; min-height: 220px;">
+                        <h3 style="color: #FAFAFA; margin: 0 0 0.5rem 0; font-size: 1.4rem;">{icon} {species} {emoji}</h3>
+                        <p style="color: #FAFAFA; font-weight: bold; margin: 0 0 1rem 0;">{performance}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Metrics in columns with better spacing
+                    metric_col1, metric_col2, metric_col3 = st.columns(3)
+                    
+                    with metric_col1:
+                        st.metric(
+                            "Average", 
+                            f"{species_data['Average Distance (km)']:.0f} km",
+                            delta=f"{species_data['Average Distance (km)'] - overall_avg:.0f} km"
+                        )
+                    
+                    with metric_col2:
+                        st.metric(
+                            "Minimum", 
+                            f"{species_data['Min Distance (km)']:.0f} km"
+                        )
+                    
+                    with metric_col3:
+                        st.metric(
+                            "Maximum", 
+                            f"{species_data['Max Distance (km)']:.0f} km"
+                        )
+                    
+                    # Additional info with better styling
+                    st.markdown(f"""
+                    <div style="background-color: #1E3A5F; padding: 0.75rem; border-radius: 6px; margin: 1rem 0; text-align: center;">
+                        <span style="color: #FAFAFA;">📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km</span>
+                    </div>
+                    """, unsafe_allow_html=True)
             
             # Right card  
             with col_right:
@@ -1525,50 +1671,52 @@ with tab3:
                     if avg_dist > overall_avg * 1.2:
                         performance = "🟢 Long Distance"
                         emoji = "🚀"
+                        card_color = "#1E4D2B"
                     elif avg_dist < overall_avg * 0.8:
                         performance = "🔵 Short Distance"
                         emoji = "🏠"
+                        card_color = "#1E3A5F"
                     else:
                         performance = "🟡 Medium Distance"
                         emoji = "✈️"
+                        card_color = "#4D3A1E"
                     
-                    # Create card using container
-                    with st.container():
-                        st.markdown(f"""
-                        <div style="background-color: #1E1E1E; padding: 1rem; border-radius: 8px; border: 1px solid #333333; margin-bottom: 1rem;">
-                            <h3 style="color: #FAFAFA; margin-top: 0;">{icon} {species} {emoji}</h3>
-                            <p style="color: #FAFAFA; font-weight: bold;">{performance}</p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                        # Metrics in columns
-                        metric_col1, metric_col2, metric_col3 = st.columns(3)
-                        
-                        with metric_col1:
-                            st.metric(
-                                "Average", 
-                                f"{species_data['Average Distance (km)']:.0f} km",
-                                delta=f"{species_data['Average Distance (km)'] - overall_avg:.0f} km"
-                            )
-                        
-                        with metric_col2:
-                            st.metric(
-                                "Minimum", 
-                                f"{species_data['Min Distance (km)']:.0f} km"
-                            )
-                        
-                        with metric_col3:
-                            st.metric(
-                                "Maximum", 
-                                f"{species_data['Max Distance (km)']:.0f} km"
-                            )
-                        
-                        # Additional info
-                        st.info(f"📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km")
-                        
-        
-        st.markdown("---")
-        
+                    # Create professional card
+                    st.markdown(f"""
+                    <div class="dashboard-card" style="background-color: {card_color}; min-height: 220px;">
+                        <h3 style="color: #FAFAFA; margin: 0 0 0.5rem 0; font-size: 1.4rem;">{icon} {species} {emoji}</h3>
+                        <p style="color: #FAFAFA; font-weight: bold; margin: 0 0 1rem 0;">{performance}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    # Metrics in columns with better spacing
+                    metric_col1, metric_col2, metric_col3 = st.columns(3)
+                    
+                    with metric_col1:
+                        st.metric(
+                            "Average", 
+                            f"{species_data['Average Distance (km)']:.0f} km",
+                            delta=f"{species_data['Average Distance (km)'] - overall_avg:.0f} km"
+                        )
+                    
+                    with metric_col2:
+                        st.metric(
+                            "Minimum", 
+                            f"{species_data['Min Distance (km)']:.0f} km"
+                        )
+                    
+                    with metric_col3:
+                        st.metric(
+                            "Maximum", 
+                            f"{species_data['Max Distance (km)']:.0f} km"
+                        )
+                    
+                    # Additional info with better styling
+                    st.markdown(f"""
+                    <div style="background-color: #1E3A5F; padding: 0.75rem; border-radius: 6px; margin: 1rem 0; text-align: center;">
+                        <span style="color: #FAFAFA;">📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km</span>
+                    </div>
+                    """, unsafe_allow_html=True)
         # Interactive Analysis Section
         st.subheader("📈 Interactive Analysis")
         
