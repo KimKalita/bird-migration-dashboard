@@ -1622,13 +1622,10 @@ with tab3:
                         emoji = "✈️"
                         card_color = "#4D3A1E"
                     
-                    # Create professional card
-                    st.markdown(f"""
-                    <div class="dashboard-card" style="background-color: {card_color}; min-height: 220px;">
-                        <h3 style="color: #FAFAFA; margin: 0 0 0.5rem 0; font-size: 1.4rem;">{icon} {species} {emoji}</h3>
-                        <p style="color: #FAFAFA; font-weight: bold; margin: 0 0 1rem 0;">{performance}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # Create card using container
+                    with st.container():
+                        st.markdown(f"### {icon} {species} {emoji}")
+                        st.markdown(f"**{performance}**")
                     
                     # Metrics in columns with better spacing
                     metric_col1, metric_col2, metric_col3 = st.columns(3)
@@ -1652,12 +1649,10 @@ with tab3:
                             f"{species_data['Max Distance (km)']:.0f} km"
                         )
                     
-                    # Additional info with better styling
-                    st.markdown(f"""
-                    <div style="background-color: #1E3A5F; padding: 0.75rem; border-radius: 6px; margin: 1rem 0; text-align: center;">
-                        <span style="color: #FAFAFA;">📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km</span>
-                    </div>
-                    """, unsafe_allow_html=True)
+                     # Additional info
+                    st.info(f"📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km")
+                        
+                    st.markdown("---")
             
             # Right card  
             with col_right:
@@ -1682,12 +1677,9 @@ with tab3:
                         card_color = "#4D3A1E"
                     
                     # Create professional card
-                    st.markdown(f"""
-                    <div class="dashboard-card" style="background-color: {card_color}; min-height: 220px;">
-                        <h3 style="color: #FAFAFA; margin: 0 0 0.5rem 0; font-size: 1.4rem;">{icon} {species} {emoji}</h3>
-                        <p style="color: #FAFAFA; font-weight: bold; margin: 0 0 1rem 0;">{performance}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    with st.container():
+                        st.markdown(f"### {icon} {species} {emoji}")
+                        st.markdown(f"**{performance}**")
                     
                     # Metrics in columns with better spacing
                     metric_col1, metric_col2, metric_col3 = st.columns(3)
@@ -1711,12 +1703,10 @@ with tab3:
                             f"{species_data['Max Distance (km)']:.0f} km"
                         )
                     
-                    # Additional info with better styling
-                    st.markdown(f"""
-                    <div style="background-color: #1E3A5F; padding: 0.75rem; border-radius: 6px; margin: 1rem 0; text-align: center;">
-                        <span style="color: #FAFAFA;">📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km</span>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # Additional info
+                    st.info(f"📊 Sample Size: {species_data['Sample Size']:.0f} birds | 📐 Std Dev: {species_data['Std Dev']:.0f} km")
+                        
+                    st.markdown("---")
         # Interactive Analysis Section
         st.subheader("📈 Interactive Analysis")
         
