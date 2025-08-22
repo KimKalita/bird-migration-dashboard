@@ -10,7 +10,6 @@ from plotly.subplots import make_subplots
 import warnings
 warnings.filterwarnings('ignore')
 
-# Set pandas options
 pd.options.mode.chained_assignment = None
 
 # Page configuration with dark theme
@@ -21,8 +20,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Dark theme with custom CSS
-# Dark theme with custom CSS - Professional sizing
 st.markdown("""
 <style>
     .stApp {
@@ -316,7 +313,7 @@ def create_sample_data():
         'Migration_Reason': np.random.choice(['Breeding', 'Wintering', 'Feeding'], 100)
     })
 
-# Helper functions
+
 def convert_month_to_number(month_value):
     """Convert month name or number to numeric value"""
     if pd.isna(month_value):
@@ -371,15 +368,12 @@ def prepare_migration_data_flexible(df):
     """Prepare migration data with flexible column handling"""
     columns_to_check = ['Start_Latitude', 'Start_Longitude', 'End_Latitude', 'End_Longitude', 'Species']
     
-    # Check if required columns exist
     if not all(col in df.columns for col in columns_to_check):
         st.error("Missing required columns in dataset. Please check your data file.")
         return pd.DataFrame()
     
-    # Filter out missing coordinates
     df_clean = df.dropna(subset=['Start_Latitude', 'Start_Longitude', 'End_Latitude', 'End_Longitude'])
     
-    # Process month data if available
     if 'Migration_Start_Month' in df_clean.columns:
         df_clean['Migration_Start_Month_Numeric'] = df_clean['Migration_Start_Month'].apply(convert_month_to_number)
         df_clean['Start_Season'] = df_clean['Migration_Start_Month'].apply(get_season_from_month)
@@ -393,7 +387,6 @@ def create_monthly_animation(df_clean, migration_reason_filter=None, show_routes
         st.warning("No data available for monthly animation")
         return None
     
-    # Apply migration reason filter
     if migration_reason_filter and 'Migration_Reason' in df_clean.columns:
         df_filtered = df_clean[df_clean['Migration_Reason'].isin(migration_reason_filter)]
         if len(df_filtered) == 0:
@@ -419,33 +412,33 @@ def create_monthly_animation(df_clean, migration_reason_filter=None, show_routes
         st.warning("No records with valid month data")
         return None
     
-    # Sample data for performance
+
     if len(df_with_months) > 500:
         df_sample = df_with_months.sample(n=500, random_state=42)
     else:
         df_sample = df_with_months
     
-    # Create month labels for proper ordering
+    
     month_labels = {
         1: 'January', 2: 'February', 3: 'March', 4: 'April',
         5: 'May', 6: 'June', 7: 'July', 8: 'August', 
         9: 'September', 10: 'October', 11: 'November', 12: 'December'
     }
     
-    # Add month labels to data
+    
     df_sample['Month_Label'] = df_sample[month_col].map(month_labels)
     
     if show_routes and all(col in df_sample.columns for col in ['End_Latitude', 'End_Longitude']):
-        # Create route-based visualization
+        
         return create_route_animation_plotly(df_sample, month_col, animation_speed, month_labels)
     else:
-        # Create point-based visualization (your original approach)
+       
         return create_point_animation_plotly(df_sample, month_col, animation_speed, month_labels)
 
 def create_route_animation_plotly(df_sample, month_col, animation_speed, month_labels):
     """Create animation showing migration routes by month"""
     
-    # Determine color column (prefer Migration_Reason, fallback to Species)
+    
     if 'Migration_Reason' in df_sample.columns and not df_sample['Migration_Reason'].isna().all():
         color_col = 'Migration_Reason'
     else:
@@ -453,7 +446,7 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
     
     fig = go.Figure()
     
-    # Get color palette (bright colors for dark background)
+    
     unique_categories = df_sample[color_col].unique()
     bright_colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F', '#FF8A80', '#85C1E9']
     color_map = {cat: bright_colors[i % len(bright_colors)] for i, cat in enumerate(unique_categories)}
@@ -474,7 +467,7 @@ def create_route_animation_plotly(df_sample, month_col, animation_speed, month_l
             category = row[color_col]
             color = color_map[category]
             
-            # Add migration route line
+            
             frame_traces.append(
                 go.Scattergeo(
                     lon=[row['Start_Longitude'], row['End_Longitude']],
@@ -592,7 +585,7 @@ def create_point_animation_plotly(df_sample, month_col, animation_speed, month_l
     
     color_column = 'Migration_Reason' if 'Migration_Reason' in df_sample.columns else 'Species'
     
-    # Create the scatter plot with dark theme
+    
     fig = px.scatter_geo(
         df_sample,
         lat='Start_Latitude',
@@ -607,7 +600,7 @@ def create_point_animation_plotly(df_sample, month_col, animation_speed, month_l
         color_discrete_sequence=['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F']
     )
     
-    # Update layout for dark theme
+    
     fig.update_layout(
         geo=dict(
             bgcolor='#0E1117',
@@ -669,7 +662,7 @@ def generate_seasonal_insights(data):
             peak_count = month_counts.max()
             insights.append(f"Peak migration occurs in **{month_names[peak_month]}** with {peak_count} recorded migrations")
             
-            # Seasonal distribution
+           
             spring_months = [3, 4, 5]
             summer_months = [6, 7, 8]
             fall_months = [9, 10, 11]
@@ -701,7 +694,7 @@ def generate_behavioral_insights(data):
     """Generate insights about migration behavior patterns"""
     insights = []
     
-    # Distance analysis
+   
     if 'Flight_Distance_km' in data.columns:
         avg_distance = data['Flight_Distance_km'].mean()
         max_distance = data['Flight_Distance_km'].max()
@@ -710,14 +703,14 @@ def generate_behavioral_insights(data):
         insights.append(f"Average migration distance is **{avg_distance:.0f} km**")
         insights.append(f"Longest recorded journey: **{max_distance:.0f} km**")
         
-        # Distance by migration reason
+        
         if 'Migration_Reason' in data.columns:
             distance_by_reason = data.groupby('Migration_Reason')['Flight_Distance_km'].mean().sort_values(ascending=False)
             longest_reason = distance_by_reason.index[0]
             longest_distance = distance_by_reason.iloc[0]
             insights.append(f"**{longest_reason}** migrations cover the greatest distances (avg: {longest_distance:.0f} km)")
     
-    # Speed analysis
+    
     if 'Average_Speed_kmph' in data.columns:
         avg_speed = data['Average_Speed_kmph'].mean()
         insights.append(f"Average migration speed is **{avg_speed:.1f} km/h**")
@@ -730,7 +723,7 @@ def generate_behavioral_insights(data):
                 fastest_speed = speed_by_species.iloc[0]
                 insights.append(f"**{fastest_species}** are the fastest migrants (avg: {fastest_speed:.1f} km/h)")
     
-    # Flock behavior
+   
     if 'Migrated_in_Flock' in data.columns:
         flock_percentage = (data['Migrated_in_Flock'] == 'Yes').mean() * 100
         insights.append(f"**{flock_percentage:.1f}%** of migrations occur in flocks")
@@ -740,7 +733,7 @@ def generate_behavioral_insights(data):
             if not pd.isna(avg_flock_size):
                 insights.append(f"Average flock size is **{avg_flock_size:.0f} birds**")
     
-    # Success rates - Fixed version
+    
     if 'Migration_Success' in data.columns:
         success_values = data['Migration_Success'].unique()
         if 'Success' in success_values:
@@ -759,20 +752,20 @@ def generate_geographic_insights(data):
     """Generate insights about geographic patterns"""
     insights = []
     
-    # Regional analysis
+    
     if 'Region' in data.columns:
         region_counts = data['Region'].value_counts()
         most_active_region = region_counts.index[0]
         insights.append(f"**{most_active_region}** shows the highest migration activity ({region_counts.iloc[0]} records)")
     
-    # Altitude patterns
+    
     if 'Max_Altitude_m' in data.columns:
         avg_altitude = data['Max_Altitude_m'].mean()
         max_altitude = data['Max_Altitude_m'].max()
         insights.append(f"Birds fly at an average maximum altitude of **{avg_altitude:.0f} meters**")
         insights.append(f"Highest recorded altitude: **{max_altitude:.0f} meters**")
     
-    # Weather impact
+    
     if 'Weather_Condition' in data.columns and 'Migration_Success' in data.columns:
         success_values = data['Migration_Success'].unique()
         if 'Success' in success_values:
@@ -792,12 +785,12 @@ def generate_geographic_insights(data):
             best_success_rate = weather_success.iloc[0]
             insights.append(f"**{best_weather}** weather conditions show highest success rates")
     
-    # Rest stop patterns
+    
     if 'Rest_Stops' in data.columns:
         avg_rest_stops = data['Rest_Stops'].mean()
         insights.append(f"Birds make an average of **{avg_rest_stops:.1f} rest stops** during migration")
         
-        # Rest stops vs success
+        
         if 'Migration_Success' in data.columns:
             success_values = data['Migration_Success'].unique()
             if 'Success' in success_values:
@@ -837,15 +830,15 @@ def display_summary_stats(data):
             avg_distance = data['Flight_Distance_km'].mean()
             st.metric("Avg Distance (km)", f"{avg_distance:.0f}")
     
-    # Additional detailed statistics
+    
     if st.checkbox("Show Detailed Statistics", key="detailed_stats"):
         st.subheader("Detailed Breakdown")
         
-        # Species distribution
+        
         if 'Species' in data.columns:
             st.write("**Species Distribution:**")
             species_dist = data['Species'].value_counts().head(10)
-            # Create bar chart with dark theme
+            
             fig_species = px.bar(
                 x=species_dist.index, 
                 y=species_dist.values,
@@ -861,7 +854,7 @@ def display_summary_stats(data):
             )
             st.plotly_chart(fig_species, use_container_width=True)
         
-        # Migration reasons
+       
         if 'Migration_Reason' in data.columns:
             st.write("**Migration Reasons:**")
             reason_dist = data['Migration_Reason'].value_counts()
@@ -880,7 +873,7 @@ def display_summary_stats(data):
             )
             st.plotly_chart(fig_reason, use_container_width=True)
 
-# Environmental functions (updated with dark theme)
+
 def create_environmental_filters(data):
     """Create interactive filters for environmental analysis"""
     
@@ -888,7 +881,7 @@ def create_environmental_filters(data):
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        # Weather condition filter
+        
         if 'Weather_Condition' in data.columns:
             weather_options = ['All'] + list(data['Weather_Condition'].dropna().unique())
             st.session_state.weather_filter = st.selectbox(
@@ -899,7 +892,7 @@ def create_environmental_filters(data):
             )
     
     with col2:
-        # Habitat filter
+        
         if 'Habitat' in data.columns:
             habitat_options = ['All'] + list(data['Habitat'].dropna().unique())
             st.session_state.habitat_filter = st.selectbox(
@@ -910,7 +903,7 @@ def create_environmental_filters(data):
             )
     
     with col3:
-        # Food supply filter
+       
         if 'Food_Supply_Level' in data.columns:
             food_options = ['All'] + list(data['Food_Supply_Level'].dropna().unique())
             st.session_state.food_filter = st.selectbox(
@@ -921,7 +914,7 @@ def create_environmental_filters(data):
             )
     
     with col4:
-        # Temperature range
+       
         if 'Temperature_C' in data.columns:
             temp_range = st.slider(
                 "Temperature Range (°C)",
@@ -967,7 +960,7 @@ def create_environmental_insights_dashboard(data):
         create_environmental_sweet_spot(data)
     
     with col2:
-        # Risk Assessment Gauge
+        
         create_risk_assessment_gauge(data)
     
     st.markdown("---")
@@ -1037,7 +1030,7 @@ def create_environmental_sweet_spot(data):
     
     if all(col in data.columns for col in ['Temperature_C', 'Wind_Speed_kmph', 'Migration_Success']):
         
-        # Handle different success formats
+        
         success_values = data['Migration_Success'].unique()
         if 'Success' in success_values:
             success_data = data[data['Migration_Success'] == 'Success']
@@ -1054,7 +1047,7 @@ def create_environmental_sweet_spot(data):
         if len(success_data) > 0 or len(failed_data) > 0:
             fig = go.Figure()
             
-            # Add successful migrations
+           
             if len(success_data) > 0:
                 fig.add_trace(go.Scatter(
                     x=success_data['Temperature_C'],
@@ -1070,7 +1063,7 @@ def create_environmental_sweet_spot(data):
                     hovertemplate='Temp: %{x}°C<br>Wind: %{y} km/h<br>Status: Successful<extra></extra>'
                 ))
             
-            # Add failed migrations
+            
             if len(failed_data) > 0:
                 fig.add_trace(go.Scatter(
                     x=failed_data['Temperature_C'],
@@ -1086,7 +1079,7 @@ def create_environmental_sweet_spot(data):
                     hovertemplate='Temp: %{x}°C<br>Wind: %{y} km/h<br>Status: Failed<extra></extra>'
                 ))
             
-            # Add sweet spot zone
+            
             if len(success_data) > 10:
                 temp_sweet = success_data['Temperature_C'].quantile([0.25, 0.75])
                 wind_sweet = success_data['Wind_Speed_kmph'].quantile([0.25, 0.75])
@@ -1170,7 +1163,7 @@ def create_risk_assessment_gauge(data):
     )
     st.plotly_chart(fig, use_container_width=True)
     
-    # Risk interpretation
+    
     if risk_score <= 3:
         st.success("🟢 **Low Risk**: Excellent environmental conditions for migration")
     elif risk_score <= 6:
@@ -1183,7 +1176,7 @@ def create_environmental_correlations(data):
     
     st.subheader("🔗 Environmental Factor Relationships")
     
-    # Select relevant environmental columns
+    
     env_columns = []
     for col in ['Temperature_C', 'Wind_Speed_kmph', 'Humidity_%', 'Pressure_hPa', 'Visibility_km']:
         if col in data.columns:
@@ -1208,7 +1201,7 @@ def create_environmental_correlations(data):
         )
         st.plotly_chart(fig, use_container_width=True)
         
-        # Find strongest correlations
+        
         correlations = []
         for i in range(len(correlation_matrix.columns)):
             for j in range(i+1, len(correlation_matrix.columns)):
@@ -1233,7 +1226,7 @@ def create_species_environmental_preferences(data):
     
     if 'Species' in data.columns and 'Temperature_C' in data.columns:
         
-        # Fixed version - handle different success formats
+        
         def calculate_success_rate(x):
             success_values = x.unique()
             if 'Success' in success_values:
@@ -1253,7 +1246,7 @@ def create_species_environmental_preferences(data):
         
         species_prefs.columns = ['Preferred Temp (°C)', 'Preferred Wind (km/h)', 'Success Rate (%)']
         
-        # Sort by success rate
+       
         species_prefs = species_prefs.sort_values('Success Rate (%)', ascending=False)
         
         st.dataframe(
@@ -1261,7 +1254,7 @@ def create_species_environmental_preferences(data):
             use_container_width=True
         )
         
-        # Highlight top performer
+        
         if len(species_prefs) > 0:
             top_species = species_prefs.index[0]
             top_success = species_prefs.iloc[0]['Success Rate (%)']
@@ -1274,7 +1267,7 @@ def calculate_environmental_risk_score(data):
     
     risk_factors = []
     
-    # Weather condition risk
+    
     if 'Weather_Condition' in data.columns:
         weather_risk = {
             'Clear': 1, 'Cloudy': 3, 'Rainy': 6, 'Stormy': 9
@@ -1283,7 +1276,7 @@ def calculate_environmental_risk_score(data):
         if not pd.isna(avg_weather_risk):
             risk_factors.append(avg_weather_risk)
     
-    # Wind speed risk (too high or too low is risky)
+   
     if 'Wind_Speed_kmph' in data.columns:
         wind_speeds = data['Wind_Speed_kmph'].dropna()
         if len(wind_speeds) > 0:
@@ -1292,14 +1285,14 @@ def calculate_environmental_risk_score(data):
                 8 if x > 25 else 6 if x < 5 else 2 if 10 <= x <= 20 else 4).mean()
             risk_factors.append(wind_risk)
     
-    # Food supply risk
+   
     if 'Food_Supply_Level' in data.columns:
         food_risk = {'High': 1, 'Medium': 3, 'Low': 8}
         avg_food_risk = data['Food_Supply_Level'].map(food_risk).mean()
         if not pd.isna(avg_food_risk):
             risk_factors.append(avg_food_risk)
     
-    # Temperature extremes risk
+    
     if 'Temperature_C' in data.columns:
         temps = data['Temperature_C'].dropna()
         if len(temps) > 0:
@@ -1317,7 +1310,7 @@ def create_environmental_insights_panel(data):
     
     insights = []
     
-    # Weather impact insights - Fixed version
+    
     if 'Weather_Condition' in data.columns and 'Migration_Success' in data.columns:
         success_values = data['Migration_Success'].unique()
         if 'Success' in success_values:
@@ -1338,13 +1331,13 @@ def create_environmental_insights_panel(data):
             insights.append(f"🌤️ **{best_weather}** weather provides the best migration conditions ({weather_success.iloc[0]:.1f}% success)")
             insights.append(f"⛈️ **{worst_weather}** weather is most challenging ({weather_success.iloc[-1]:.1f}% success)")
     
-    # Food supply insights
+   
     if 'Food_Supply_Level' in data.columns and 'Flight_Distance_km' in data.columns:
         food_distance = data.groupby('Food_Supply_Level')['Flight_Distance_km'].mean().sort_values()
         if len(food_distance) > 1:
             insights.append(f"🍃 Birds with **{food_distance.index[-1]}** food supply travel furthest ({food_distance.iloc[-1]:.0f} km avg)")
     
-    # Temperature tolerance insights - Fixed version
+    
     if 'Temperature_C' in data.columns and 'Migration_Success' in data.columns:
         success_values = data['Migration_Success'].unique()
         if 'Success' in success_values:
@@ -1360,14 +1353,14 @@ def create_environmental_insights_panel(data):
             optimal_range = (successful_temps.quantile(0.25), successful_temps.quantile(0.75))
             insights.append(f"🌡️ Optimal temperature range for success: **{optimal_range[0]:.1f}°C to {optimal_range[1]:.1f}°C**")
     
-    # Habitat-specific insights
+    
     if 'Habitat' in data.columns and 'Average_Speed_kmph' in data.columns:
         habitat_speed = data.groupby('Habitat')['Average_Speed_kmph'].mean().sort_values(ascending=False)
         if len(habitat_speed) > 0:
             fastest_habitat = habitat_speed.index[0]
             insights.append(f"🏞️ Birds from **{fastest_habitat}** habitats migrate fastest ({habitat_speed.iloc[0]:.1f} km/h avg)")
     
-    # Habitat success rates - Fixed version
+   
     if 'Habitat' in data.columns and 'Migration_Success' in data.columns:
         success_values = data['Migration_Success'].unique()
         if 'Success' in success_values:
@@ -1392,7 +1385,7 @@ def create_environmental_insights_panel(data):
     if not insights:
         st.info("Insufficient data to generate detailed environmental insights with current filters.")
 
-# MAIN EXECUTION CODE
+
 bird_data = load_data()
 df_clean = prepare_migration_data_flexible(bird_data)
 
@@ -1415,10 +1408,10 @@ with tab1:
     st.header("🌦️ Environmental Impact Dashboard")
     st.markdown("*Discover how weather, habitat, and food supply influence migration success*")
     
-    # Interactive filters
+    
     create_environmental_filters(bird_data)
     
-    # Apply filters and create dashboard
+    
     filtered_env_data = apply_environmental_filters(bird_data)
     
     if len(filtered_env_data) > 0:
@@ -1430,11 +1423,11 @@ with tab1:
 with tab2:
     st.header("Seasonal Migration Patterns")
     
-    # Add filters and controls
+    
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        # Migration reason filter
+        
         if 'Migration_Reason' in df_clean.columns:
             available_reasons = df_clean['Migration_Reason'].dropna().unique()
             migration_reason_filter = st.multiselect(
@@ -1447,7 +1440,7 @@ with tab2:
             migration_reason_filter = None
     
     with col2:
-        # Show routes toggle
+        
         show_routes = st.checkbox(
             "Show Migration Routes", 
             value=True,
@@ -1455,7 +1448,7 @@ with tab2:
         )
     
     with col3:
-        # Animation speed control
+       
         animation_speed = st.slider(
             "Animation Speed (ms)",
             min_value=500,
@@ -1465,7 +1458,7 @@ with tab2:
             help="Lower = faster animation"
         )
     
-    # Create monthly animation with enhanced features
+    
     try:
         with st.spinner("Creating enhanced monthly migration animation..."):
             monthly_fig = create_monthly_animation(df_clean, migration_reason_filter, show_routes, animation_speed)
@@ -1493,7 +1486,7 @@ with tab2:
         analysis_data = df_clean
     
     if len(analysis_data) > 0:
-        # Create insights in columns
+       
         col1, col2 = st.columns(2)
         
         with col1:
@@ -1508,13 +1501,13 @@ with tab2:
             for insight in behavioral_insights:
                 st.write(f"• {insight}")
         
-        # Full width insights
+        
         st.subheader("🌍 Geographic & Performance Insights")
         geo_insights = generate_geographic_insights(analysis_data)
         for insight in geo_insights:
             st.write(f"• {insight}")
         
-        # Add summary statistics
+        
         st.subheader("📈 Summary Statistics")
         display_summary_stats(analysis_data)
     else:
@@ -1532,13 +1525,13 @@ with tab3:
             break
     
     if distance_col:
-        # Calculate statistics
+        
         stats = filtered_data.groupby('Species')[distance_col].agg(['mean', 'min', 'max', 'std', 'count']).reset_index()
         stats.columns = ['Species', 'Average Distance (km)', 'Min Distance (km)', 'Max Distance (km)', 'Std Dev', 'Sample Size']
         stats = stats.round(1)
         stats = stats.sort_values('Average Distance (km)', ascending=False)
         
-        # Top-level metrics
+        
         st.subheader("🎯 Key Insights")
         col1, col2, col3, col4 = st.columns(4)
         
@@ -1579,7 +1572,7 @@ with tab3:
         
         st.markdown("---")
         
-        # Pretty Species Cards using Streamlit native components
+        
         st.subheader("🦅 Species Performance Cards")
         
         # Species icons
@@ -1596,18 +1589,18 @@ with tab3:
             'Heron': '🦢'
         }
         
-        # Create cards in rows of 2 with professional styling
+        
         for i in range(0, len(stats), 2):
             col_left, col_right = st.columns(2, gap="large")
             
-            # Left card
+            
             with col_left:
                 if i < len(stats):
                     species_data = stats.iloc[i]
                     species = species_data['Species']
                     icon = species_icons.get(species, '🐦')
                     
-                    # Determine performance level
+                    
                     avg_dist = species_data['Average Distance (km)']
                     if avg_dist > overall_avg * 1.2:
                         performance = "🟢 Long Distance"
@@ -1622,12 +1615,12 @@ with tab3:
                         emoji = "✈️"
                         card_color = "#4D3A1E"
                     
-                    # Create card using container
+                    
                     with st.container():
                         st.markdown(f"### {icon} {species} {emoji}")
                         st.markdown(f"**{performance}**")
                     
-                    # Metrics in columns with better spacing
+                    
                     metric_col1, metric_col2, metric_col3 = st.columns(3)
                     
                     with metric_col1:
@@ -1661,7 +1654,7 @@ with tab3:
                     species = species_data['Species']
                     icon = species_icons.get(species, '🐦')
                     
-                    # Determine performance level
+                    
                     avg_dist = species_data['Average Distance (km)']
                     if avg_dist > overall_avg * 1.2:
                         performance = "🟢 Long Distance"
@@ -1676,12 +1669,12 @@ with tab3:
                         emoji = "✈️"
                         card_color = "#4D3A1E"
                     
-                    # Create professional card
+                  
                     with st.container():
                         st.markdown(f"### {icon} {species} {emoji}")
                         st.markdown(f"**{performance}**")
                     
-                    # Metrics in columns with better spacing
+                    
                     metric_col1, metric_col2, metric_col3 = st.columns(3)
                     
                     with metric_col1:
@@ -1721,7 +1714,7 @@ with tab3:
         
         with analysis_col1:
             if analysis_type == "Distance Distribution":
-                # Distance distribution histogram
+                
                 hist_fig = px.histogram(
                     filtered_data, 
                     x=distance_col, 
